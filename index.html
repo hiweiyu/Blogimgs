@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时数字时钟</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- 基础样式 --- */
+        body {
+            /* 使用弹性布局让时钟在页面上完全居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* 视口高度，占满整个屏幕 */
+            margin: 0;
+
+            /* 深邃的背景色，突出时钟效果 */
+            background-color: #121212;
+            overflow: hidden; /* 隐藏滚动条 */
+        }
+
+        /* --- 时钟容器样式 --- */
+        #clock-container {
+            text-align: center;
+            padding: 40px 60px;
+            background: rgba(0, 0, 0, 0.2); /* 半透明背景，增加层次感 */
+            border-radius: 20px; /* 圆角 */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 细微的边框 */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* 玻璃拟态阴影效果 */
+            backdrop-filter: blur(10px); /* 玻璃背景模糊效果 */
+        }
+
+        /* --- 时钟文本核心样式 --- */
+        #clock {
+            /* 引入一个有科技感的等宽字体 */
+            font-family: 'Share Tech Mono', monospace;
+            /* 字体颜色：青色 */
+            color: #00e5ff;
+            /* 字体大小，使用vw单位可以根据屏幕宽度自适应 */
+            font-size: clamp(3rem, 15vw, 9rem); /* 最小3rem，最大9rem，随15%视口宽度变化 */
+            font-weight: bold;
+            letter-spacing: 0.1em; /* 增加字符间距 */
+
+            /* --- 核心：霓虹辉光效果 --- */
+            /* 使用多层text-shadow叠加出辉光和弥散效果 */
+            text-shadow:
+                0 0 5px rgba(0, 229, 255, 0.8),   /* 核心光晕 */
+                0 0 10px rgba(0, 229, 255, 0.8),  /* 中层光晕 */
+                0 0 25px rgba(0, 229, 255, 0.7),  /* 外层光晕 */
+                0 0 50px rgba(0, 229, 255, 0.5),  /* 弥散光 */
+                0 0 80px rgba(0, 229, 255, 0.3);  /* 大范围弥散 */
+        }
+
+        /* --- 日期样式 --- */
+        #date {
+            font-family: 'Share Tech Mono', 'Microsoft YaHei', sans-serif;
+            color: #a9a9a9; /* 柔和的灰色 */
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            margin-top: 10px;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 2px rgba(169, 169, 169, 0.5); /* 轻微阴影，保持清晰 */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock-container">
+        <div id="clock">00:00:00</div>
+        <div id="date">2026-01-01 星期一</div>
+    </div>
+
+    <script>
+        // 封装一个函数，用于给小于10的数字补0
+        function padZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        // 定义一个更新时钟的函数
+        function updateClock() {
+            // 获取DOM元素
+            const clockElement = document.getElementById('clock');
+            const dateElement = document.getElementById('date');
+
+            // 创建Date对象获取当前时间
+            const now = new Date();
+
+            // 获取时、分、秒
+            const hours = padZero(now.getHours());
+            const minutes = padZero(now.getMinutes());
+            const seconds = padZero(now.getSeconds());
+
+            // 格式化时间字符串
+            const timeString = `${hours}:${minutes}:${seconds}`;
+
+            // 获取年、月、日、星期
+            const year = now.getFullYear();
+            const month = padZero(now.getMonth() + 1); // 月份从0开始，所以+1
+            const day = padZero(now.getDate());
+            const week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][now.getDay()];
+
+            // 格式化日期字符串
+            const dateString = `${year}-${month}-${day} ${week}`;
+
+            // 将时间和日期更新到页面上
+            clockElement.textContent = timeString;
+            dateElement.textContent = dateString;
+        }
+
+        // 首次加载时立即调用一次，避免页面打开时出现默认值
+        updateClock();
+
+        // 使用setInterval，每秒钟（1000毫秒）调用一次updateClock函数
+        setInterval(updateClock, 1000);
+    </script>
+
+</body>
+</html>
